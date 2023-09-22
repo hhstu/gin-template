@@ -1,0 +1,4 @@
+webserver:
+  port: 8080
+  mode: debug # debug release
+log_level: info # debug info
