@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"github.com/hhstu/gin-template/log"
 	"github.com/hhstu/gin-template/routes"
 	"syscall"
@@ -18,10 +17,6 @@ import (
 	"time"
 )
 
-func init() {
-	gin.SetMode(config.AppConfig.Webserver.Mode)
-}
-
 func main() {
 	defer log.Logger.Sync()
 	webServerPort := config.AppConfig.Webserver.Port
@@ -31,7 +26,7 @@ func main() {
 		MaxHeaderBytes: 1 << 20, // 1 MB
 	}
 	go func() {
-		log.Logger.Infof("http server start at %d", webServerPort)
+		log.Logger.Infof("http server start at 0.0.0.0:%s", webServerPort)
 		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Logger.Error("listen error: %s", err)
 		}
@@ -48,4 +43,5 @@ func main() {
 	if err := srv.Shutdown(ctx); err != nil {
 		log.Logger.Error("shutdown error: %s", err)
 	}
+	log.Logger.Infof("shutdown success")
 }

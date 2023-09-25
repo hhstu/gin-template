@@ -3,12 +3,17 @@ package routes
 import (
 	"github.com/chenjiandongx/ginprom"
 	"github.com/gin-gonic/gin"
+	"github.com/hhstu/gin-template/config"
 	"github.com/hhstu/gin-template/log"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"net/http"
 	_ "net/http/pprof"
 	"runtime/debug"
 )
+
+func init() {
+	gin.SetMode(config.AppConfig.Webserver.Mode)
+}
 
 func Routes() *gin.Engine {
 	r := gin.Default()
