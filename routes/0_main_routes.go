@@ -1,8 +1,10 @@
 package routes
 
 import (
+	"fmt"
 	"github.com/chenjiandongx/ginprom"
 	"github.com/gin-gonic/gin"
+	"github.com/hhstu/gin-template/apis"
 	"github.com/hhstu/gin-template/config"
 	"github.com/hhstu/gin-template/log"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -48,8 +50,10 @@ func HandlerRecover(c *gin.Context) {
 		if r := recover(); r != nil {
 			log.Logger.Errorf("panic: internal error %+v", r)
 			debug.PrintStack()
-			// returnError(500, "服务器内部异常", c)
-			c.Abort()
+			c.AbortWithStatusJSON(http.StatusInternalServerError, apis.Response{
+				Status: http.StatusInternalServerError,
+				Msg:    fmt.Sprintf("系统内部错误"),
+			})
 		}
 	}()
 	c.Next()
