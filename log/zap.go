@@ -4,14 +4,13 @@ import (
 	"github.com/hhstu/gin-template/config"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"time"
 )
 
 var Logger *zap.SugaredLogger
 
 func init() {
 	logLevel := zap.DebugLevel
-	switch config.AppConfig.LogLevel {
+	switch config.AppConfig.Log.Level {
 	case "debug", "DEBUG":
 		logLevel = zap.DebugLevel
 	case "info", "INFO":
@@ -41,13 +40,16 @@ func init() {
 			EncodeLevel:    zapcore.LowercaseLevelEncoder,
 			EncodeDuration: zapcore.SecondsDurationEncoder,
 			EncodeCaller:   zapcore.ShortCallerEncoder,
-			EncodeTime:     CustomTimeEncoder,
+			EncodeTime:     zapcore.ISO8601TimeEncoder,
 		},
-		OutputPaths:      []string{"stderr"},
+		OutputPaths:      []string{"stdout"},
 		ErrorOutputPaths: []string{"stderr"},
 	}
+	if config.AppConfig.Log.Encoding != "" {
+		cfg.Encoding = config.AppConfig.Log.Encoding
+		if config.AppConfig.Log.Encoding == "console" {
+			cfg.EncoderConfig.EncodeLevel = zapcore.LowercaseColorLevelEncoder
+		}
+	}
 	Logger = zap.Must(cfg.Build()).Sugar()
-}
-func CustomTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
-	enc.AppendString(t.Format("2006/01/02 15:04:05.000"))
 }

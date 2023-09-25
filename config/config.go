@@ -31,5 +31,8 @@ type Config struct {
 		Port string `json:"port"`
 		Mode string `json:"mode"`
 	} `json:"webserver"`
-	LogLevel string `json:"log_level"`
+	Log struct {
+		Level    string `json:"level"`
+		Encoding string `json:"encoding"`
+	} `json:"log"`
 }
