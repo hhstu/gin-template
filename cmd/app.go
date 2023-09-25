@@ -37,9 +37,9 @@ func main() {
 
 	quit := make(chan os.Signal)
 	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
-	<-quit
+	s := <-quit
 
-	log.Logger.Infof("get OS shutdown signal, shutting down...")
+	log.Logger.Infof("get os shutdown signal %s, shutting down...", s.String())
 	if err := srv.Shutdown(ctx); err != nil {
 		log.Logger.Error("shutdown error: %s", err)
 	}
